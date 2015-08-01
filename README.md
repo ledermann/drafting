@@ -39,3 +39,4 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/[USERN
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
+Based on some code from the probably outdated gem [drafts](https://rubygems.org/gems/drafts) by Alexey Kuznetsov (@lxkuz)
