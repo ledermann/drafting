@@ -24,6 +24,14 @@ describe Drafting::InstanceMethods do
       expect(topic.drafts).to eq([draft])
     end
 
+    it 'should store extra attributes to Draft' do
+      message.priority = 5
+      message.save_draft(user)
+
+      draft = Draft.find(message.draft_id)
+      expect(draft.data['priority']).to eq(5)
+    end
+
     it 'should update existing Draft object' do
       message.save_draft(user)
 
