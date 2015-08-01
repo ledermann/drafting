@@ -4,7 +4,7 @@ class DraftingMigration < ActiveRecord::Migration
       t.string :target_type, :null => false
       t.references :user, :null => false
       t.references :parent, :polymorphic => true, :index => true
-      t.text :data, :limit => 16777215
+      t.text :data, :limit => 16777215, :null => false
       t.datetime :updated_at, :null => false
     end
 

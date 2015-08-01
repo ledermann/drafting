@@ -3,4 +3,6 @@ class Message < ActiveRecord::Base
   belongs_to :user
 
   has_drafts :parent => :topic
+
+  validates_presence_of :topic_id, :user_id, :content
 end
