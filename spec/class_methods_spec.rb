@@ -7,11 +7,18 @@ describe Drafting::ClassMethods do
   let(:page) { Page.new :title => 'First post' }
 
   describe 'drafts' do
-    before(:each) { message.save_draft(user) }
+    it 'should find Draft objects for user' do
+      message.save_draft(user)
 
-    it 'should find Draft objects' do
       expect(Message.drafts(user).count).to eq(1)
       expect(Message.drafts(user).first).to be_a(Draft)
+    end
+
+    it 'should find Draft objects without user' do
+      page.save_draft
+
+      expect(Page.drafts(nil).count).to eq(1)
+      expect(Page.drafts(nil).first).to be_a(Draft)
     end
   end
 

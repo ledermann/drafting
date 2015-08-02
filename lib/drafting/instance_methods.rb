@@ -1,6 +1,6 @@
 module Drafting
   module InstanceMethods
-    def save_draft(user)
+    def save_draft(user=nil)
       return false unless self.new_record?
 
       draft = Draft.find_by_id(self.draft_id) || Draft.new
@@ -16,8 +16,9 @@ module Drafting
 
       draft.data = attrs
       draft.target_type = self.class.name
-      draft.user_id = user.id
+      draft.user = user
       draft.parent = self.send(self.class.draft_parent) if self.class.draft_parent
+
       result = draft.save
       self.draft_id = draft.id if result
       result

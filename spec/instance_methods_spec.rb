@@ -4,9 +4,10 @@ describe Drafting::InstanceMethods do
   let(:user) { FactoryGirl.create(:user) }
   let(:topic) { FactoryGirl.create(:topic) }
   let(:message) { topic.messages.build :user => user, :content => 'foo' }
+  let(:page) { Page.new :title => 'First post' }
 
   describe 'save_draft' do
-    it 'should store Draft object' do
+    it 'should store Draft object for user' do
       expect {
         result = message.save_draft(user)
 
@@ -22,6 +23,17 @@ describe Drafting::InstanceMethods do
       expect(draft.data).to eq('content' => 'foo', 'topic_id' => topic.id, 'user_id' => user.id)
 
       expect(topic.drafts).to eq([draft])
+    end
+
+    it 'should store Draft object without user' do
+      expect {
+        result = page.save_draft
+
+        expect(result).to eq(true)
+      }.to change(Draft, :count).by(1)
+
+      draft = Draft.find(page.draft_id)
+      expect(draft.user_id).to eq(nil)
     end
 
     it 'should store extra attributes to Draft' do
