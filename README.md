@@ -16,7 +16,7 @@ Remarkable:
 Add this line to your application's Gemfile:
 
 ```ruby
-    gem 'drafting'
+gem 'drafting'
 ```
 
 And then execute:
