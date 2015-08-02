@@ -22,6 +22,7 @@ require 'database_cleaner'
 require 'models/user'
 require 'models/topic'
 require 'models/message'
+require 'models/page'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.

@@ -15,6 +15,12 @@ class SpecMigration < ActiveRecord::Migration
       t.text :content, :null => false
       t.timestamps :null => false
     end
+
+    create_table :pages, force: true do |t|
+      t.string :title, :null => false
+      t.text :content, :null => false
+      t.timestamps :null => false
+    end
   end
 
   def self.down
