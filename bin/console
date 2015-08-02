@@ -11,6 +11,7 @@ require 'spec/models/user'
 require 'spec/models/topic'
 require 'spec/models/message'
 require 'spec/models/page'
+require 'spec/models/tag'
 
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.

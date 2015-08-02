@@ -20,7 +20,7 @@ describe Drafting::InstanceMethods do
       expect(draft.parent_id).to eq(topic.id)
       expect(draft.parent_type).to eq('Topic')
       expect(draft.user_id).to eq(user.id)
-      expect(draft.data).to eq('content' => 'foo', 'topic_id' => topic.id, 'user_id' => user.id)
+      expect(draft.restore.attributes).to eq(message.attributes)
 
       expect(topic.drafts).to eq([draft])
     end
@@ -41,7 +41,17 @@ describe Drafting::InstanceMethods do
       message.save_draft(user)
 
       draft = Draft.find(message.draft_id)
-      expect(draft.data['priority']).to eq(5)
+      expect(draft.restore.priority).to eq(5)
+    end
+
+    it 'should store assocations to Draft' do
+      message = topic.messages.build :user => user, :content => 'foo'
+      message.tags.build :name => 'important'
+      message.tags.build :name => 'ruby'
+      message.save_draft(user)
+
+      draft = Draft.find(message.draft_id)
+      expect(draft.restore.tags.map(&:name)).to eq(%w(important ruby))
     end
 
     it 'should update existing Draft object' do
@@ -53,7 +63,7 @@ describe Drafting::InstanceMethods do
       }.to_not change(Draft, :count)
 
       draft = Draft.find(message.draft_id)
-      expect(draft.data).to eq('content' => 'bar', 'topic_id' => topic.id, 'user_id' => user.id)
+      expect(draft.restore.attributes).to eq(message.attributes)
     end
 
     it 'should fail after real save' do
@@ -74,7 +84,7 @@ describe Drafting::InstanceMethods do
       }.to_not change(Draft, :count)
 
       draft = Draft.find(message.draft_id)
-      expect(draft.data).to eq('content' => 'bar', 'topic_id' => topic.id, 'user_id' => user.id)
+      expect(draft.restore.attributes).to eq(message.attributes)
     end
   end
 

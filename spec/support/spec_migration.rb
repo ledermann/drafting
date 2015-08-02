@@ -21,9 +21,15 @@ class SpecMigration < ActiveRecord::Migration
       t.text :content, :null => false
       t.timestamps :null => false
     end
+
+    create_table :tags, force: true do |t|
+      t.string :name, :null => false
+      t.references :taggable, :polymorphic => true, :null => false, :index => true
+    end
   end
 
   def self.down
+    drop_table :tags
     drop_table :pages
     drop_table :messages
     drop_table :users

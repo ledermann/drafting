@@ -4,7 +4,7 @@ module Drafting
       draft = draft_or_id.is_a?(Draft) ? draft_or_id : Draft.find(draft_or_id)
       raise ArgumentError unless draft.target_type == name
 
-      target = self.new(draft.data)
+      target = Marshal.load(draft.data)
       target.send("#{draft_parent}=", draft.parent) if draft_parent
       target.draft_id = draft.id
       target

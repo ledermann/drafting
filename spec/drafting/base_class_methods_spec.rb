@@ -27,18 +27,6 @@ describe Drafting::BaseClassMethods do
       expect(Author.new).to respond_to(:drafts)
     end
 
-    it "should accept :extra_attributes key with single symbol" do
-      expect {
-        Post.has_drafts :extra_attributes => :tags
-      }.to_not raise_error
-    end
-
-    it "should accept :extra_attributes key with array of symbols" do
-      expect {
-        Post.has_drafts :extra_attributes => [ :tags ]
-      }.to_not raise_error
-    end
-
     it "should fail for non-hash argument" do
       expect {
         Post.has_drafts(42)
