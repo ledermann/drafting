@@ -1,15 +1,22 @@
 # Drafting
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/drafting`. To experiment with that code, run `bin/console` for an interactive prompt.
+This Ruby gem enhances `ActiveRecord::Base` to save a draft version of the current object.
 
-TODO: Delete this and the text above, and describe your gem
+Remarkable:
+
+* The gem stores all the data as a serialized hash in **one** separate table and does not need to modify the existing tables.
+* It handles drafts for different models
+* It allows saving draft for an object which does not pass the validations.
+* A draft is optionally linked to a given user, so every user can manage his own drafts (invisible for the other users)
+* A draft is optionally linked to a parent object. This helps showing existing drafts in a context (e.g. message drafts for a given topic)
+
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'drafting'
+    gem 'drafting'
 ```
 
 And then execute:
@@ -32,11 +39,11 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/drafting. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ledermann/drafting. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](https://contributor-covenant.org) code of conduct.
 
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
-Based on some code from the probably outdated gem [drafts](https://rubygems.org/gems/drafts) by Alexey Kuznetsov (@lxkuz)
+Based on some code from the (probably) outdated gem [drafts](https://rubygems.org/gems/drafts) by Alexey Kuznetsov (@lxkuz)
