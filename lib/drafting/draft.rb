@@ -6,7 +6,7 @@ class Draft < ActiveRecord::Base
 
   validates_presence_of :data, :target_type
 
-  def rebuild
+  def restore
     target_type.constantize.from_draft(self)
   end
 end
