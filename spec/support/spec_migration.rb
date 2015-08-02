@@ -24,6 +24,7 @@ class SpecMigration < ActiveRecord::Migration
   end
 
   def self.down
+    drop_table :pages
     drop_table :messages
     drop_table :users
   end
