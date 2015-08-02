@@ -19,7 +19,7 @@ module Drafting
         self.draft_parent = options[:parent]
       end
 
-      self.draft_extra_attributes = options[:extra_attributes]  || []
+      self.draft_extra_attributes = Array(options[:extra_attributes])
 
       include Drafting::InstanceMethods
       extend Drafting::ClassMethods
