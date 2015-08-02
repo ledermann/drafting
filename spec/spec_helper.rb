@@ -26,6 +26,13 @@ require 'models/page'
 # in spec/support/ and its subdirectories.
 Dir[File.expand_path(File.join(File.dirname(__FILE__),'support','**','*.rb'))].each {|f| require f}
 
+RSpec.configure do |config|
+  config.after(:suite) do
+    SpecMigration.down
+    DraftingMigration.down
+  end
+end
+
 def setup_db
   ActiveRecord::Base.configurations = YAML.load_file(File.expand_path('database.yml', File.dirname(__FILE__)))
 
