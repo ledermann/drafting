@@ -74,5 +74,19 @@ describe Drafting::ClassMethods do
         expect(Draft.find_by_id(draft_id)).to eq(nil)
       end
     end
+
+    it "should fail for non existing draft" do
+      expect {
+        Page.from_draft(555)
+      }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "should fail for other draft target" do
+      message.save_draft(user)
+
+      expect {
+        Page.from_draft(message.draft_id)
+      }.to raise_error(ArgumentError)
+    end
   end
 end

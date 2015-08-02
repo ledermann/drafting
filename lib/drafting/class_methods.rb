@@ -1,7 +1,9 @@
 module Drafting
   module ClassMethods
-    def from_draft(data)
-      draft = data.is_a?(Draft) ? data : Draft.find(data)
+    def from_draft(draft_or_id)
+      draft = draft_or_id.is_a?(Draft) ? draft_or_id : Draft.find(draft_or_id)
+      raise ArgumentError unless draft.target_type == name
+
       target = self.new(draft.data)
       target.send("#{draft_parent}=", draft.parent) if draft_parent
       target.draft_id = draft.id
