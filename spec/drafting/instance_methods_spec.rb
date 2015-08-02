@@ -99,14 +99,4 @@ describe Drafting::InstanceMethods do
       expect(new_message.draft_id).to eq(nil)
     end
   end
-
-  describe 'rebuild' do
-    before(:each) { message.save_draft(user) }
-
-    it "should build new object with same attributes" do
-      new_message = Draft.find(message.draft_id).rebuild
-
-      expect(new_message.attributes).to eq(message.attributes)
-    end
-  end
 end
