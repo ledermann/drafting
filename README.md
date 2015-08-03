@@ -32,6 +32,11 @@ Or install it yourself as:
 
     $ gem install drafting
 
+Finally, generate and run the migration:
+
+    $ rails g drafting:migration
+    $ rake db:migrate
+
 
 ## Usage
 
