@@ -1,12 +1,13 @@
 # Drafting
 
-This Ruby gem enhances `ActiveRecord::Base` to save a draft version of the current object.
+This Ruby gem enhances `ActiveRecord::Base` to save a draft version of the current instance.
 
 Remarkable:
 
-* The gem stores all the data as a serialized hash in **one** separate table and does not need to modify the existing tables.
+* The gem stores all the data in **one** separate table and does not need to modify the existing tables
 * It handles drafts for different models
-* It allows saving draft for an object which does not pass the validations.
+* It allows saving draft for an object which does not pass the validations
+* It uses marshaling, so associations and virtual attributes are saved, too
 * A draft is optionally linked to a given user, so every user can manage his own drafts (invisible for the other users)
 * A draft is optionally linked to a parent object. This helps showing existing drafts in a context (e.g. message drafts for a given topic)
 
