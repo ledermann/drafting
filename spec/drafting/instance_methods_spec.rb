@@ -6,6 +6,25 @@ describe Drafting::InstanceMethods do
   let(:message) { topic.messages.build :user => user, :content => 'foo' }
   let(:page) { Page.new :title => 'First post' }
 
+  describe 'dump_to_draft' do
+    it 'should construct string' do
+      expect(message.dump_to_draft).to be_a(String)
+    end
+  end
+
+  describe 'load_to_draft' do
+    let(:string) { message.dump_to_draft }
+
+    it 'should restore object from string' do
+      new_message = Message.new
+      new_message.load_from_draft(string)
+
+      expect(new_message.content).to eq('foo')
+      expect(new_message.user).to eq(user)
+      expect(new_message.topic).to eq(topic)
+    end
+  end
+
   describe 'save_draft' do
     it 'should store Draft object for user' do
       expect {
