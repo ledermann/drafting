@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Drafting::InstanceMethods do
   let(:user) { FactoryGirl.create(:user) }
+  let(:other_user) { FactoryGirl.create(:user) }
   let(:topic) { FactoryGirl.create(:topic) }
   let(:message) { topic.messages.build :user => user, :content => 'foo' }
   let(:page) { Page.new :title => 'First post' }
@@ -41,7 +42,8 @@ describe Drafting::InstanceMethods do
       expect(draft.user_id).to eq(user.id)
       expect(draft.restore.attributes).to eq(message.attributes)
 
-      expect(topic.drafts).to eq([draft])
+      expect(topic.drafts(user)).to eq([draft])
+      expect(topic.drafts(other_user)).to eq([])
     end
 
     it 'should store Draft object without user' do

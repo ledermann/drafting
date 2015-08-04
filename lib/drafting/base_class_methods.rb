@@ -12,8 +12,10 @@ module Drafting
         parent_class = self.reflect_on_all_associations(:belongs_to).find { |a| a.name == options[:parent] }.try(:klass)
         raise ArgumentError unless parent_class
 
-        parent_class.class_eval do
-          has_many :drafts, :as => :parent, :dependent => :nullify
+        unless parent_class.method_defined? :drafts
+          parent_class.send :define_method, :drafts do |user|
+            Draft.where(:user => user, :parent => self)
+          end
         end
 
         self.draft_parent = options[:parent]
