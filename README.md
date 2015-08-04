@@ -6,14 +6,15 @@ This Ruby gem enhances `ActiveRecord::Base` to save a draft version of the curre
 [![Code Climate](https://codeclimate.com/github/ledermann/drafting/badges/gpa.svg)](https://codeclimate.com/github/ledermann/drafting)
 [![Coverage Status](https://coveralls.io/repos/ledermann/drafting/badge.svg?branch=master)](https://coveralls.io/r/ledermann/drafting?branch=master)
 
-Features:
+## Features
 
 * The gem stores all the data in **one** separate table and does not need to modify the existing tables
 * It handles drafts for different models
-* It allows saving draft for an object which does not pass the validations
-* It uses marshaling, so associations and virtual attributes are saved, too
+* It allows saving draft for an instance which does not pass the validations
+* A draft stores associations and virtual attributes, too
 * A draft is optionally linked to a given user, so every user can manage his own drafts (invisible for the other users)
-* A draft is optionally linked to a parent object. This helps showing existing drafts in a context (e.g. message drafts for a given topic)
+* A draft is optionally linked to a parent instance. This helps showing existing drafts in a context (e.g. message drafts for a given topic)
+* Only 80 lines of code
 
 
 ## Installation
@@ -40,7 +41,7 @@ Finally, generate and run the migration:
 
 ## Usage
 
-Simple example:
+### Simple example
 
 ```ruby
 class Message < ActiveRecord::Base
@@ -53,11 +54,11 @@ message.save_draft(current_user)
 # Time passes ...
 
 draft = Message.drafts(current_user).first
-message = Message.from_draft(draft)
-message.save
+message = draft.restore
+message.save!
 ```
 
-Linking to parent object:
+### Linking to parent instance
 
 ```ruby
 class Topic < ActiveRecord::Base
@@ -73,8 +74,20 @@ topic = Topic.create! title: 'World domination'
 message = topic.messages.build content: 'First step: Get some coffee.'
 message.save_draft(current_user)
 
-topic.drafts(current_user) # => [message]
+# Time passes ...
+
+draft = topic.drafts(current_user).first
+message = draft.restore
+message.save!
 ```
+
+### Hints
+
+* `save_draft` is allowed only if the instance is not persisted yet
+* Doing `save_draft` overwrites a previous draft (if there is one)
+* After doing a `save`, the draft (if there is one) will be deleted
+* The `user` argument can be nil if you don't want to distinguish between multiple users
+* Saving draft stores the data via `Marshal.dump` and `Marshal.load`. If you don't like this or need some customization, you can override the instance methods `dump_to_draft` and `load_from_draft` (see source)
 
 
 ## Development
