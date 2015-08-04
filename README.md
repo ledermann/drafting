@@ -6,7 +6,7 @@ This Ruby gem enhances `ActiveRecord::Base` to save a draft version of the curre
 [![Code Climate](https://codeclimate.com/github/ledermann/drafting/badges/gpa.svg)](https://codeclimate.com/github/ledermann/drafting)
 [![Coverage Status](https://coveralls.io/repos/ledermann/drafting/badge.svg?branch=master)](https://coveralls.io/r/ledermann/drafting?branch=master)
 
-Remarkable:
+Features:
 
 * The gem stores all the data in **one** separate table and does not need to modify the existing tables
 * It handles drafts for different models
@@ -40,20 +40,42 @@ Finally, generate and run the migration:
 
 ## Usage
 
+Simple example:
+
 ```ruby
 class Message < ActiveRecord::Base
   has_drafts
 end
 
-m = Message.new title: 'World domination', content: 'First step: Get some coffee.'
-m.save_draft(current_user)
+message = Message.new content: "Let's start with a simple example."
+message.save_draft(current_user)
 
 # Time passes ...
 
 draft = Message.drafts(current_user).first
-m = Message.from_draft(draft)
-m.save
+message = Message.from_draft(draft)
+message.save
 ```
+
+Linking to parent object:
+
+```ruby
+class Topic < ActiveRecord::Base
+  has_many :messages
+end
+
+class Message < ActiveRecord::Base
+  belongs_to :topic
+  has_drafts parent: :topic
+end
+
+topic = Topic.create! title: 'World domination'
+message = topic.messages.build content: 'First step: Get some coffee.'
+message.save_draft(current_user)
+
+topic.drafts(current_user) # => [message]
+```
+
 
 ## Development
 
