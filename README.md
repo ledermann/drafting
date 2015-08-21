@@ -77,6 +77,9 @@ message.save_draft(current_user)
 # Time passes ...
 
 draft = topic.drafts(current_user).first
+# or
+draft = Topic.child_drafts(current_user).first
+
 message = draft.restore
 message.save!
 ```

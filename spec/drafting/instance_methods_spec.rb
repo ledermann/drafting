@@ -44,6 +44,9 @@ describe Drafting::InstanceMethods do
 
       expect(topic.drafts(user)).to eq([draft])
       expect(topic.drafts(other_user)).to eq([])
+
+      expect(Topic.child_drafts(user)).to eq([draft])
+      expect(Topic.child_drafts(other_user)).to eq([])
     end
 
     it 'should store Draft object without user' do

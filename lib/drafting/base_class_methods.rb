@@ -13,8 +13,14 @@ module Drafting
         raise ArgumentError unless parent_class
 
         unless parent_class.method_defined? :drafts
-          parent_class.send :define_method, :drafts do |user|
-            Draft.where(:user => user, :parent => self)
+          parent_class.class_eval do
+            def drafts(user)
+              Draft.where(:user => user, :parent => self)
+            end
+
+            def self.child_drafts(user)
+              Draft.where(:user => user, :parent_type => self)
+            end
           end
         end
 
