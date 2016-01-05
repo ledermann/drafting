@@ -22,6 +22,8 @@ require 'models/topic'
 require 'models/message'
 require 'models/page'
 require 'models/tag'
+require 'models/author'
+require 'models/post'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.

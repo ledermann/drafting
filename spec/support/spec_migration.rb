@@ -4,6 +4,10 @@ class SpecMigration < ActiveRecord::Migration
       t.string :name, :null => false
     end
 
+    create_table :authors, force: true do |t|
+      t.string :name, :null => false
+    end
+
     create_table :topics, force: true do |t|
       t.string :title, :null => false
       t.timestamps :null => false
@@ -22,6 +26,10 @@ class SpecMigration < ActiveRecord::Migration
       t.timestamps :null => false
     end
 
+    create_table :posts, force: true do |t|
+      t.references :author, :null => false
+    end
+
     create_table :tags, force: true do |t|
       t.string :name, :null => false
       t.references :taggable, :polymorphic => true, :null => false, :index => true
@@ -30,8 +38,11 @@ class SpecMigration < ActiveRecord::Migration
 
   def self.down
     drop_table :tags
+    drop_table :posts
     drop_table :pages
     drop_table :messages
+    drop_table :topics
+    drop_table :authors
     drop_table :users
   end
 end

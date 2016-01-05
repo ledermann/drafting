@@ -1,16 +1,5 @@
 require 'spec_helper'
 
-class Author < ActiveRecord::Base
-  def self.columns; [] end
-end
-
-class Post < ActiveRecord::Base
-  def self.columns; [] end
-
-  belongs_to :author
-  attr_accessor :tags
-end
-
 describe Drafting::BaseClassMethods do
   describe :has_drafts do
     it "should accept no argument" do
