@@ -19,7 +19,7 @@ module Drafting
             end
 
             def self.child_drafts(user)
-              Draft.where(:user => user, :parent_type => self)
+              Draft.where(:user => user, :parent_type => self.base_class.name)
             end
           end
         end
