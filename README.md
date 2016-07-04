@@ -16,6 +16,11 @@ This Ruby gem enhances `ActiveRecord::Base` to save a draft version of the curre
 * A draft is optionally linked to a parent instance. This helps showing existing drafts in a context (e.g. message drafts for a given topic)
 * Only 80 lines of code
 
+## Requirements
+
+* Ruby 2.0.0 or newer
+* ActiveRecord 4.1 or newer (including 5.0)
+
 
 ## Installation
 

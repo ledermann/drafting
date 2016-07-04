@@ -46,4 +46,5 @@ def setup_db
   SpecMigration.up
 end
 
+puts "Testing with ActiveRecord #{ActiveRecord::VERSION::STRING}"
 setup_db
