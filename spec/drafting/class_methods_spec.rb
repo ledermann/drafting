@@ -43,7 +43,8 @@ describe Drafting::ClassMethods do
         expect {
           new_message.save!
           expect(new_message.draft_id).to eq(nil)
-        }.to change(Draft, :count).by(-1)
+        }.to change(Draft, :count).by(-1).and \
+             change(Message, :count).by(1)
 
         expect(Draft.find_by_id(draft_id)).to eq(nil)
       end
@@ -69,7 +70,8 @@ describe Drafting::ClassMethods do
         expect {
           new_page.save!
           expect(new_page.draft_id).to eq(nil)
-        }.to change(Draft, :count).by(-1)
+        }.to change(Draft, :count).by(-1).and \
+             change(Message, :count).by(0)
 
         expect(Draft.find_by_id(draft_id)).to eq(nil)
       end

@@ -33,7 +33,8 @@ describe Drafting::InstanceMethods do
 
         expect(result).to eq(true)
         expect(message.draft_id).to be_a(Integer)
-      }.to change(Draft, :count).by(1)
+      }.to change(Draft, :count).by(1).and \
+           change(Message, :count).by(0)
 
       draft = Draft.find(message.draft_id)
       expect(draft.target_type).to eq('Message')
@@ -54,7 +55,8 @@ describe Drafting::InstanceMethods do
         result = page.save_draft
 
         expect(result).to eq(true)
-      }.to change(Draft, :count).by(1)
+      }.to change(Draft, :count).by(1).and \
+           change(Message, :count).by(0)
 
       draft = Draft.find(page.draft_id)
       expect(draft.user_id).to eq(nil)
@@ -84,7 +86,8 @@ describe Drafting::InstanceMethods do
       message.content = 'bar'
       expect {
         message.save_draft(user)
-      }.to_not change(Draft, :count)
+      }.to change(Draft, :count).by(0).and \
+           change(Message, :count).by(0)
 
       draft = Draft.find(message.draft_id)
       expect(draft.restore.attributes).to eq(message.attributes)
@@ -105,7 +108,8 @@ describe Drafting::InstanceMethods do
 
       expect {
         message.update_draft(user, :content => 'bar')
-      }.to_not change(Draft, :count)
+      }.to change(Draft, :count).by(0).and \
+           change(Message, :count).by(0)
 
       draft = Draft.find(message.draft_id)
       expect(draft.restore.attributes).to eq(message.attributes)
@@ -118,7 +122,8 @@ describe Drafting::InstanceMethods do
     it 'should remove Draft object on immediate save' do
       expect {
         message.save!
-      }.to change(Draft, :count).by(-1)
+      }.to change(Draft, :count).by(-1).and \
+           change(Message, :count).by(1)
 
       expect(message.draft_id).to eq(nil)
     end
@@ -128,7 +133,8 @@ describe Drafting::InstanceMethods do
 
       expect {
         new_message.save!
-      }.to change(Draft, :count).by(-1)
+      }.to change(Draft, :count).by(-1).and \
+           change(Message, :count).by(1)
 
       expect(new_message.draft_id).to eq(nil)
     end
