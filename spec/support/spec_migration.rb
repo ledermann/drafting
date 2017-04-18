@@ -1,4 +1,4 @@
-class SpecMigration < ActiveRecord::Migration
+class SpecMigration < Drafting::MIGRATION_BASE_CLASS
   def self.up
     create_table :users, force: true do |t|
       t.string :name, :null => false

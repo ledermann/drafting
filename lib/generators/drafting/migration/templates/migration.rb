@@ -1,4 +1,4 @@
-class DraftingMigration < ActiveRecord::Migration
+class DraftingMigration < Drafting::MIGRATION_BASE_CLASS
   def self.up
     create_table :drafts do |t|
       t.string :target_type, :null => false
