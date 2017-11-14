@@ -1,38 +1,38 @@
 class SpecMigration < Drafting::MIGRATION_BASE_CLASS
   def self.up
     create_table :users, force: true do |t|
-      t.string :name, :null => false
+      t.string :name, null: false
     end
 
     create_table :authors, force: true do |t|
-      t.string :name, :null => false
+      t.string :name, null: false
     end
 
     create_table :topics, force: true do |t|
-      t.string :title, :null => false
-      t.timestamps :null => false
+      t.string :title, null: false
+      t.timestamps null: false
     end
 
     create_table :messages, force: true do |t|
-      t.references :topic, :null => false, :index => true
-      t.references :user, :null => false, :index => true
-      t.text :content, :null => false
-      t.timestamps :null => false
+      t.references :topic, null: false, index: true
+      t.references :user, null: false, index: true
+      t.text :content, null: false
+      t.timestamps null: false
     end
 
     create_table :pages, force: true do |t|
-      t.string :title, :null => false
-      t.text :content, :null => false
-      t.timestamps :null => false
+      t.string :title, null: false
+      t.text :content, null: false
+      t.timestamps null: false
     end
 
     create_table :posts, force: true do |t|
-      t.references :author, :null => false
+      t.references :author, null: false
     end
 
     create_table :tags, force: true do |t|
-      t.string :name, :null => false
-      t.references :taggable, :polymorphic => true, :null => false, :index => true
+      t.string :name, null: false
+      t.references :taggable, polymorphic: true, null: false, index: true
     end
   end
 

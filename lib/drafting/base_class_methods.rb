@@ -15,11 +15,11 @@ module Drafting
         unless parent_class.method_defined? :drafts
           parent_class.class_eval do
             def drafts(user)
-              Draft.where(:user => user, :parent => self)
+              Draft.where(user: user, parent: self)
             end
 
             def self.child_drafts(user)
-              Draft.where(:user => user, :parent_type => self.base_class.name)
+              Draft.where(user: user, parent_type: self.base_class.name)
             end
           end
         end

@@ -10,7 +10,7 @@ describe Drafting::BaseClassMethods do
 
     it "should accept :parent key" do
       expect {
-        Post.has_drafts :parent => :author
+        Post.has_drafts parent: :author
       }.to_not raise_error
 
       expect(Author.new).to respond_to(:drafts)
@@ -24,13 +24,13 @@ describe Drafting::BaseClassMethods do
 
     it "should fail for invalid hash keys" do
       expect {
-        Post.has_drafts :bar => 'baz'
+        Post.has_drafts bar: 'baz'
       }.to raise_error(ArgumentError)
     end
 
     it "should fail for non-existing parent" do
       expect {
-        Post.has_drafts :parent => :bar
+        Post.has_drafts parent: :bar
       }.to raise_error(ArgumentError)
     end
   end

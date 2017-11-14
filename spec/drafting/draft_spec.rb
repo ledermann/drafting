@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Draft do
   let(:user) { FactoryBot.create(:user) }
   let(:topic) { FactoryBot.create(:topic) }
-  let(:message) { topic.messages.build :user => user, :content => 'foo' }
-  let(:message1) { topic.messages.build :user => user, :content => 'foo1' }
+  let(:message) { topic.messages.build user: user, content: 'foo' }
+  let(:message1) { topic.messages.build user: user, content: 'foo1' }
 
   describe 'restore' do
     before(:each) { message.save_draft(user) }

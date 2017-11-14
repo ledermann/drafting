@@ -4,8 +4,8 @@ describe Drafting::InstanceMethods do
   let(:user) { FactoryBot.create(:user) }
   let(:other_user) { FactoryBot.create(:user) }
   let(:topic) { FactoryBot.create(:topic) }
-  let(:message) { topic.messages.build :user => user, :content => 'foo' }
-  let(:page) { Page.new :title => 'First post' }
+  let(:message) { topic.messages.build user: user, content: 'foo' }
+  let(:page) { Page.new title: 'First post' }
 
   describe 'dump_to_draft' do
     it 'should construct string' do
@@ -71,9 +71,9 @@ describe Drafting::InstanceMethods do
     end
 
     it 'should store assocations to Draft' do
-      message = topic.messages.build :user => user, :content => 'foo'
-      message.tags.build :name => 'important'
-      message.tags.build :name => 'ruby'
+      message = topic.messages.build user: user, content: 'foo'
+      message.tags.build name: 'important'
+      message.tags.build name: 'ruby'
       message.save_draft(user)
 
       draft = Draft.find(message.draft_id)
@@ -107,7 +107,7 @@ describe Drafting::InstanceMethods do
       message.save_draft(user)
 
       expect {
-        message.update_draft(user, :content => 'bar')
+        message.update_draft(user, content: 'bar')
       }.to change(Draft, :count).by(0).and \
            change(Message, :count).by(0)
 

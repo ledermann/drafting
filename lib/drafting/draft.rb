@@ -1,6 +1,6 @@
 class Draft < ActiveRecord::Base
   belongs_to :user
-  belongs_to :parent, :polymorphic => true
+  belongs_to :parent, polymorphic: true
 
   validates_presence_of :data, :target_type
 

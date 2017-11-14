@@ -13,7 +13,7 @@ module Drafting
     end
 
     def drafts(user)
-      Draft.where(:user => user, :target_type => name)
+      Draft.where(user: user, target_type: name)
     end
   end
 end
