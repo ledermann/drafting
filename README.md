@@ -14,7 +14,7 @@ This Ruby gem enhances `ActiveRecord::Base` to save a draft version of the curre
 * A draft stores associations and virtual attributes, too
 * A draft is optionally linked to a given user, so every user can manage his own drafts (invisible for the other users)
 * A draft is optionally linked to a parent instance. This helps showing existing drafts in a context (e.g. message drafts for a given topic)
-* Only 80 lines of code
+* Only 90 lines of code
 
 ## Requirements
 
