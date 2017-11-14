@@ -61,6 +61,9 @@ message.save_draft(current_user)
 draft = Message.drafts(current_user).first
 message = draft.restore
 message.save!
+
+drafts = Message.drafts(current_user)
+messages = drafts.restore_all
 ```
 
 ### Linking to parent instance
