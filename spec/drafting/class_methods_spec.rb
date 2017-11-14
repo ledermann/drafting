@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Drafting::ClassMethods do
-  let(:user) { FactoryGirl.create(:user) }
-  let(:topic) { FactoryGirl.create(:topic) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:topic) { FactoryBot.create(:topic) }
   let(:message) { topic.messages.build :user => user, :content => 'foo' }
   let(:page) { Page.new :title => 'First post' }
 

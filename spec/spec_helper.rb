@@ -13,8 +13,8 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'drafting'
 require 'generators/drafting/migration/templates/migration.rb'
 
-require 'factory_girl'
-FactoryGirl.find_definitions
+require 'factory_bot'
+FactoryBot.find_definitions
 
 # Require some example models
 require 'models/user'
