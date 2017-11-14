@@ -7,4 +7,10 @@ class Draft < ActiveRecord::Base
   def restore
     target_type.constantize.from_draft(self)
   end
+
+  class << self
+    def restore_all
+      find_each.map(&:restore)
+    end
+  end
 end
