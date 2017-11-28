@@ -1,13 +1,13 @@
 appraise "rails-5-1" do
-  gem "activerecord", "~> 5.1.0"
+  gem "activerecord", "~> 5.1.4"
 end
 
 appraise "rails-5-0" do
-  gem "activerecord", "~> 5.0.2"
+  gem "activerecord", "~> 5.0.6"
 end
 
 appraise "rails-4-2" do
-  gem "activerecord", "~> 4.2.8"
+  gem "activerecord", "~> 4.2.9"
 end
 
 appraise "rails-4-1" do
