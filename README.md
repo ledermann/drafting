@@ -19,7 +19,7 @@ This Ruby gem enhances `ActiveRecord::Base` to save a draft version of the curre
 ## Requirements
 
 * Ruby 2.0.0 or newer
-* ActiveRecord 4.1 or newer (including 5.x)
+* ActiveRecord 4.1 or newer (including 5.1 and 5.2)
 
 
 ## Installation
