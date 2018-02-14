@@ -1,5 +1,5 @@
 appraise "rails-5-2" do
-  gem "activerecord", "~> 5.2.0.beta1"
+  gem "activerecord", "~> 5.2.0.rc1"
 end
 
 appraise "rails-5-1" do
