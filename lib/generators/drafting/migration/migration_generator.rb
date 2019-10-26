@@ -10,6 +10,7 @@ module Drafting
 
     def create_migration_file
       migration_template 'migration.rb', 'db/migrate/drafting_migration.rb'
+      migration_template 'non_user_migration.rb', 'db/migrate/non_user_drafting_migration.rb'
     end
 
     def self.next_migration_number(dirname)
