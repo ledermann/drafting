@@ -4,6 +4,10 @@ class SpecMigration < Drafting::MIGRATION_BASE_CLASS
       t.string :name, null: false
     end
 
+    create_table :admin_users, force: true do |t|
+      t.string :name, null: false
+    end
+
     create_table :authors, force: true do |t|
       t.string :name, null: false
     end
@@ -44,5 +48,6 @@ class SpecMigration < Drafting::MIGRATION_BASE_CLASS
     drop_table :topics
     drop_table :authors
     drop_table :users
+    drop_table :admin_users
   end
 end

@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Drafting::ClassMethods do
   let(:user) { FactoryBot.create(:user) }
+  let(:admin_user) { FactoryBot.create(:admin_user) }
   let(:topic) { FactoryBot.create(:topic) }
   let(:message) { topic.messages.build user: user, content: 'foo' }
   let(:page) { Page.new title: 'First post' }
@@ -19,6 +20,15 @@ describe Drafting::ClassMethods do
 
       expect(Page.drafts(nil).count).to eq(1)
       expect(Page.drafts(nil).first).to be_a(Draft)
+    end
+
+    it 'should find Draft objects with non user' do
+      page.save_draft(admin_user)
+
+      expect(Page.drafts(admin_user).count).to eq(1)
+      expect(Page.drafts(admin_user).first).to be_a(Draft)
+
+      expect(Page.drafts(user).count).to eq(0)
     end
   end
 

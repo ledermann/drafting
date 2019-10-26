@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Drafting::InstanceMethods do
   let(:user) { FactoryBot.create(:user) }
   let(:other_user) { FactoryBot.create(:user) }
+  let(:admin_user) { FactoryBot.create(:admin_user) }
   let(:topic) { FactoryBot.create(:topic) }
   let(:message) { topic.messages.build user: user, content: 'foo' }
   let(:page) { Page.new title: 'First post' }
@@ -60,6 +61,20 @@ describe Drafting::InstanceMethods do
 
       draft = Draft.find(page.draft_id)
       expect(draft.user_id).to eq(nil)
+    end
+
+    it 'should store Draft object for non user' do
+      expect {
+        result = page.save_draft(admin_user)
+
+        expect(result).to eq(true)
+      }.to change(Draft, :count).by(1).and \
+           change(Message, :count).by(0)
+
+      draft = Draft.find(page.draft_id)
+      expect(draft.user).to eq(admin_user)
+      expect(draft.user_type).to eq(admin_user.class.name)
+      expect(draft.user_id).to eq(admin_user.id)
     end
 
     it 'should store extra attributes to Draft' do

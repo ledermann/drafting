@@ -18,6 +18,7 @@ FactoryBot.find_definitions
 
 # Require some example models
 require 'models/user'
+require 'models/admin_user'
 require 'models/topic'
 require 'models/message'
 require 'models/page'
