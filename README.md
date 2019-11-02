@@ -66,6 +66,17 @@ drafts = Message.drafts(current_user)
 messages = drafts.restore_all
 ```
 
+### Migration
+
+#### 0.5.x
+
+Starting from 0.5.x, you will be able to save drafts under a non `User` model as such:
+```
+message.save_draft(author)
+```
+
+If you are upgrading from previous versions, simply run `rails g drafting:migration` again to generate the mising migration files.
+
 ### Linking to parent instance
 
 ```ruby
@@ -99,7 +110,6 @@ message.save!
 * After doing a `save`, the draft (if there is one) will be deleted
 * The `user` argument can be nil if you don't want to distinguish between multiple users
 * Saving draft stores the data via `Marshal.dump` and `Marshal.load`. If you don't like this or need some customization, you can override the instance methods `dump_to_draft` and `load_from_draft` (see source)
-
 
 ## Development
 
