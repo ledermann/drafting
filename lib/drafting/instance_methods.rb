@@ -7,7 +7,8 @@ module Drafting
 
       draft.data = dump_to_draft
       draft.target_type = self.class.name
-      draft.user = user
+      draft.user_id = user.try(:id)
+      draft.user_type = user.try(:class).try(:name)
       draft.parent = self.send(self.class.draft_parent) if self.class.draft_parent
 
       result = draft.save
