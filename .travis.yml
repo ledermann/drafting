@@ -2,10 +2,19 @@ language: ruby
 rvm:
   - 2.5.8
   - 2.6.6
-  - 2.7.1
+  - 2.7.2
+  - 3.0.0
 gemfile:
+  - gemfiles/rails_6_1.gemfile
   - gemfiles/rails_6_0.gemfile
   - gemfiles/rails_5_2.gemfile
   - gemfiles/rails_5_1.gemfile
   - gemfiles/rails_5_0.gemfile
-sudo: false
+matrix:
+  exclude:
+    - rvm: 3.0.0
+      gemfile: gemfiles/rails_5_0.gemfile
+    - rvm: 3.0.0
+      gemfile: gemfiles/rails_5_1.gemfile
+    - rvm: 3.0.0
+      gemfile: gemfiles/rails_5_2.gemfile

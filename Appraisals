@@ -1,5 +1,10 @@
+appraise "rails-6-1" do
+  gem "activerecord", "~> 6.1.2"
+  gem "sqlite3", "~> 1.4"
+end
+
 appraise "rails-6-0" do
-  gem "activerecord", "~> 6.0.2.2"
+  gem "activerecord", "~> 6.0.3.5"
   gem "sqlite3", "~> 1.4"
 end
 
