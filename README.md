@@ -2,7 +2,7 @@
 
 This Ruby gem enhances `ActiveRecord::Base` to save a draft version of the current instance.
 
-[![Build Status](https://travis-ci.org/ledermann/drafting.svg?branch=master)](https://travis-ci.org/ledermann/drafting)
+[![Build Status](https://github.com/ledermann/drafting/actions/workflows/main.yml/badge.svg)](https://github.com/ledermann/drafting/actions)
 [![Code Climate](https://codeclimate.com/github/ledermann/drafting/badges/gpa.svg)](https://codeclimate.com/github/ledermann/drafting)
 [![Coverage Status](https://coveralls.io/repos/ledermann/drafting/badge.svg?branch=master)](https://coveralls.io/r/ledermann/drafting?branch=master)
 
