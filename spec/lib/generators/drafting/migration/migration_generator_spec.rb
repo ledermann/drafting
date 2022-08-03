@@ -19,7 +19,7 @@ module Drafting
     ].each do |test_suite|
       describe test_suite[:configuration] do
         before :each do
-          ActiveRecord::Base.timestamped_migrations = test_suite[:timestamped_migrations]
+          ActiveRecord.timestamped_migrations = test_suite[:timestamped_migrations]
         end
 
         describe 'new app' do
