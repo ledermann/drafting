@@ -10,9 +10,10 @@ module Drafting
 
     def create_migration_file
       Dir.glob("#{MigrationGenerator.source_root}/*.rb").each do |abs_path|
-        filename = File.basename(abs_path)
+        basename = File.basename(abs_path)
+        filename = basename.split('-').last
 
-        migration_template filename, "db/migrate/#{filename}"
+        migration_template basename, "db/migrate/#{filename}"
       end
     end
 
