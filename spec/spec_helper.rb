@@ -11,8 +11,10 @@ end
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'drafting'
-require 'generators/drafting/migration/templates/migration.rb'
-require 'generators/drafting/migration/templates/non_user_migration.rb'
+
+Dir["#{Drafting.root}/lib/generators/drafting/migration/templates/*.rb"].each do |filename|
+  require filename
+end
 
 require 'factory_bot'
 FactoryBot.find_definitions
