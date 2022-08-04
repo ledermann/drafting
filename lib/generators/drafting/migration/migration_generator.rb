@@ -11,8 +11,12 @@ module Drafting
     def create_migration_file
       Dir.glob("#{MigrationGenerator.source_root}/*.rb").each do |abs_path|
         basename = File.basename(abs_path)
-        filename = basename.split('-').last
 
+        # these numbers will keep the migration files generated in order
+        # for backwards compatibility, do not change the order of existing migration file templates
+        raise 'Migration file should start with a number' if basename !~ /^[\d]+\-.*/
+
+        filename = basename.split('-').last
         migration_template basename, "db/migrate/#{filename}"
       end
     end
