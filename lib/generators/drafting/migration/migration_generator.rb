@@ -11,6 +11,9 @@ module Drafting
     def create_migration_file
       Dir.glob("#{MigrationGenerator.source_root}/*.rb").each do |abs_path|
         filename = File.basename(abs_path)
+
+        raise 'Migration file named wrongly' if filename !~ /migration.rb$/
+
         migration_template filename, "db/migrate/#{filename.gsub('migration.rb', 'drafting_migration.rb')}"
       end
     end
