@@ -28,26 +28,18 @@ module Drafting
             run_generator
           end
 
-          it "creates two installation db migration" do
-            migration_files =
-              Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
-
-            assert_equal migration_files.count, 2
-
-            assert_file migration_files[0],
-              /class DraftingMigration < Drafting::MIGRATION_BASE_CLASS/
-            assert_file migration_files[1],
-              /class NonUserDraftingMigration < Drafting::MIGRATION_BASE_CLASS/
-          end
+          include_examples 'eventual output', root_dir
 
           it "creates migration files of different timestamp" do
             migration_files =
               Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
 
-              migration_no1 = File.basename(migration_files[0]).split("_").first
-              migration_no2 = File.basename(migration_files[1]).split("_").first
+              timestamps = migration_files.map do |migration_file|
+                File.basename(migration_file).split("_").first
+              end
 
-              assert_not_equal migration_no1, migration_no2
+              assert_equal timestamps.size, 3
+              assert_equal timestamps.uniq.size, 3
           end
         end
 
@@ -55,26 +47,79 @@ module Drafting
           before :each do
             prepare_destination
             run_generator
-            FileUtils.rm Dir.glob("#{root_dir}/db/migrate/*non_user_drafting_migration.rb")
-
-            migration_files =
-              Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
-            expect(migration_files.count).to eq 1
-            assert_file migration_files[0],
-              /class DraftingMigration < Drafting::MIGRATION_BASE_CLASS/
-
-            run_generator
           end
 
-          it "creates only one more db migration" do
-            migration_files =
-              Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
-            expect(migration_files.count).to eq 2
+          describe 'before 0.5.x' do
+            before :each do
+              FileUtils.rm Dir.glob("#{root_dir}/db/migrate/*non_user_drafting_migration.rb")
+              FileUtils.rm Dir.glob("#{root_dir}/db/migrate/*metadata_drafting_migration.rb")
 
-            assert_file migration_files[0],
-              /class DraftingMigration < Drafting::MIGRATION_BASE_CLASS/
-            assert_file migration_files[1],
-              /class NonUserDraftingMigration < Drafting::MIGRATION_BASE_CLASS/
+              migration_files =
+                Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
+              expect(migration_files.count).to eq 1
+              assert_file migration_files[0],
+                /class DraftingMigration < Drafting::MIGRATION_BASE_CLASS/
+
+              run_generator
+            end
+
+            include_examples 'eventual output', root_dir
+          end
+
+          describe 'after 0.5.x' do
+            before :each do
+              FileUtils.rm Dir.glob("#{root_dir}/db/migrate/*metadata_drafting_migration.rb")
+
+              migration_files =
+                Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
+              expect(migration_files.count).to eq 2
+              assert_file migration_files[0],
+                /class DraftingMigration < Drafting::MIGRATION_BASE_CLASS/
+              assert_file migration_files[1],
+                /class NonUserDraftingMigration < Drafting::MIGRATION_BASE_CLASS/
+
+              run_generator
+            end
+
+            include_examples 'eventual output', root_dir
+          end
+        end
+
+        describe 'wrongly named migration files' do
+          before :each do
+            prepare_destination
+          end
+
+          describe 'not starting with "<number>-"' do
+            let!(:filename) { "#{Drafting.root}/lib/generators/drafting/migration/templates/something_drafting_migration.rb" }
+
+            before :each do
+              FileUtils.touch(filename)
+            end
+
+            after :each do
+              FileUtils.rm(filename)
+            end
+
+            it 'should raise error' do
+              expect { run_generator }.to raise_error('Migration files should start with a number followed by a dash to dictate the order of migration files to be generated')
+            end
+          end
+
+          describe 'not ending with "drafting_migration.rb"' do
+            let!(:filename) { "#{Drafting.root}/lib/generators/drafting/migration/templates/something_migration.rb" }
+
+            before :each do
+              FileUtils.touch(filename)
+            end
+
+            after :each do
+              FileUtils.rm(filename)
+            end
+
+            it 'should raise error' do
+              expect { run_generator }.to raise_error('Migration files should start with a number followed by a dash to dictate the order of migration files to be generated')
+            end
           end
         end
       end

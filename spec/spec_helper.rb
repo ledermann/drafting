@@ -11,8 +11,11 @@ end
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'drafting'
-require 'generators/drafting/migration/templates/migration.rb'
-require 'generators/drafting/migration/templates/non_user_migration.rb'
+
+require "#{Drafting.root}/lib/generators/drafting/migration/migration_generator"
+Dir["#{Drafting.root}/lib/generators/drafting/migration/templates/*.rb"].each do |filename|
+  require filename
+end
 
 require 'factory_bot'
 FactoryBot.find_definitions
@@ -34,8 +37,9 @@ Dir[File.expand_path(File.join(File.dirname(__FILE__),'support','**','*.rb'))].e
 RSpec.configure do |config|
   config.after(:suite) do
     SpecMigration.down
-    NonUserDraftingMigration.down
-    DraftingMigration.down
+    Drafting::MigrationGenerator.loop_through_migration_files(reverse: true) do |_, filename|
+      Object.const_get(filename.gsub('.rb', '').camelize).down
+    end
   end
 end
 
@@ -45,8 +49,9 @@ def setup_db
   ActiveRecord::Base.establish_connection(:sqlite)
   ActiveRecord::Migration.verbose = false
 
-  DraftingMigration.up
-  NonUserDraftingMigration.up
+  Drafting::MigrationGenerator.loop_through_migration_files do |_, filename|
+    Object.const_get(filename.gsub('.rb', '').camelize).up
+  end
   SpecMigration.up
 end
 
