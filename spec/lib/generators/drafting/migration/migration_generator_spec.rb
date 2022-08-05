@@ -19,7 +19,7 @@ module Drafting
     ].each do |test_suite|
       describe test_suite[:configuration] do
         before :each do
-          ActiveRecord.timestamped_migrations = test_suite[:timestamped_migrations]
+          ActiveRecord::Base.timestamped_migrations = test_suite[:timestamped_migrations]
         end
 
         describe 'new app' do
@@ -28,26 +28,31 @@ module Drafting
             run_generator
           end
 
-          it "creates two installation db migration" do
+          it 'creates 3 installation db migration files in order eventually' do
             migration_files =
               Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
 
-            assert_equal migration_files.count, 2
+            assert_equal migration_files.count, 3
 
             assert_file migration_files[0],
               /class DraftingMigration < Drafting::MIGRATION_BASE_CLASS/
             assert_file migration_files[1],
               /class NonUserDraftingMigration < Drafting::MIGRATION_BASE_CLASS/
+            assert_file migration_files[2],
+              /class MetadataDraftingMigration < Drafting::MIGRATION_BASE_CLASS/
           end
 
           it "creates migration files of different timestamp" do
             migration_files =
               Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
 
-              migration_no1 = File.basename(migration_files[0]).split("_").first
-              migration_no2 = File.basename(migration_files[1]).split("_").first
+              # TODO: there has to be a better way to do this
+              timestamps = migration_files.map do |migration_file|
+                File.basename(migration_file).split("_").first
+              end
 
-              assert_not_equal migration_no1, migration_no2
+              assert_equal timestamps.size, 3
+              assert_equal timestamps.uniq.size, 3
           end
         end
 
@@ -55,43 +60,35 @@ module Drafting
           before :each do
             prepare_destination
             run_generator
-            FileUtils.rm Dir.glob("#{root_dir}/db/migrate/*non_user_drafting_migration.rb")
-
-            migration_files =
-              Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
-            expect(migration_files.count).to eq 1
-            assert_file migration_files[0],
-              /class DraftingMigration < Drafting::MIGRATION_BASE_CLASS/
-
-            run_generator
           end
 
-          it "creates only one more db migration" do
-            migration_files =
-              Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
-            expect(migration_files.count).to eq 2
+          describe 'from 0.5.x' do
+            before :each do
+              FileUtils.rm Dir.glob("#{root_dir}/db/migrate/*non_user_drafting_migration.rb")
+              FileUtils.rm Dir.glob("#{root_dir}/db/migrate/*metadata_drafting_migration.rb")
 
-            assert_file migration_files[0],
-              /class DraftingMigration < Drafting::MIGRATION_BASE_CLASS/
-            assert_file migration_files[1],
-              /class NonUserDraftingMigration < Drafting::MIGRATION_BASE_CLASS/
-          end
-        end
+              migration_files =
+                Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
+              expect(migration_files.count).to eq 1
+              assert_file migration_files[0],
+                /class DraftingMigration < Drafting::MIGRATION_BASE_CLASS/
 
-        describe 'migration file not starting with "<number>-"' do
-          let!(:filename) { "#{Drafting.root}/lib/generators/drafting/migration/templates/something.rb" }
+              run_generator
+            end
 
-          before :each do
-            prepare_destination
-            FileUtils.touch(filename)
-          end
+            it 'creates 3 installation db migration files in order eventually' do
+              migration_files =
+                Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
 
-          after :each do
-            FileUtils.rm(filename)
-          end
+              assert_equal migration_files.count, 3
 
-          it 'should raise error' do
-            expect { run_generator }.to raise_error('Migration file should start with a number')
+              assert_file migration_files[0],
+                /class DraftingMigration < Drafting::MIGRATION_BASE_CLASS/
+              assert_file migration_files[1],
+                /class NonUserDraftingMigration < Drafting::MIGRATION_BASE_CLASS/
+              assert_file migration_files[2],
+                /class MetadataDraftingMigration < Drafting::MIGRATION_BASE_CLASS/
+            end
           end
         end
       end

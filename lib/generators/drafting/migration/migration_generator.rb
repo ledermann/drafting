@@ -8,27 +8,31 @@ module Drafting
     desc 'Generates migration for Drafting'
     source_root File.expand_path('../templates', __FILE__)
 
-    def create_migration_file
-      Dir.glob("#{MigrationGenerator.source_root}/*.rb").each do |abs_path|
-        basename = File.basename(abs_path)
+    # TODO: make these methods metaprogramming
+    def create_migration_file1
+      migration_template 'drafting_migration.rb', "db/migrate/drafting_migration.rb"
+    end
 
-        # these numbers will keep the migration files generated in order
-        # for backwards compatibility, do not change the order of existing migration file templates
-        raise 'Migration file should start with a number' if basename !~ /^[\d]+\-.*/
+    def create_migration_file2
+      migration_template 'non_user_drafting_migration.rb', "db/migrate/non_user_drafting_migration.rb"
+    end
 
-        filename = basename.split('-').last
-        migration_template basename, "db/migrate/#{filename}"
-      end
+    def create_migration_file3
+      migration_template 'metadata_drafting_migration.rb', "db/migrate/metadata_drafting_migration.rb"
     end
 
     def self.next_migration_number(dirname)
-      if ActiveRecord.timestamped_migrations
-        # ensure timestamp of the multiple migration files generated
-        # will be different
-        timestamp = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
-        timestamp += 1 if current_migration_number(dirname) == timestamp
+      format = '%Y%m%d%H%M%S'
 
-        timestamp
+      # check if migration number already a timestamp for timestamped migrations
+      # strptime throws error, and rescue handles if not the case
+      DateTime.strptime(current_migration_number(dirname).to_s, format)
+
+      (DateTime.parse(current_migration_number(dirname).to_s) + 1.second).strftime(format)
+    rescue ArgumentError
+      if ActiveRecord::Base.timestamped_migrations
+        # this will only run the first migration file is generated
+        Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
       else
         "%.3d" % (current_migration_number(dirname) + 1)
       end
