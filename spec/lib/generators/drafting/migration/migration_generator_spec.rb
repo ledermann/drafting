@@ -85,20 +85,41 @@ module Drafting
           end
         end
 
-        describe 'migration file not starting with "<number>-"' do
-          let!(:filename) { "#{Drafting.root}/lib/generators/drafting/migration/templates/something.rb" }
-
+        describe 'wrongly named migration files' do
           before :each do
             prepare_destination
-            FileUtils.touch(filename)
           end
 
-          after :each do
-            FileUtils.rm(filename)
+          describe 'not starting with "<number>-"' do
+            let!(:filename) { "#{Drafting.root}/lib/generators/drafting/migration/templates/something_drafting_migration.rb" }
+
+            before :each do
+              FileUtils.touch(filename)
+            end
+
+            after :each do
+              FileUtils.rm(filename)
+            end
+
+            it 'should raise error' do
+              expect { run_generator }.to raise_error('Migration files should start with a number followed by a dash to dictate the order of migration files to be generated')
+            end
           end
 
-          it 'should raise error' do
-            expect { run_generator }.to raise_error('Migration files should start with a number followed by a dash to dictate the order of migration files to be generated')
+          describe 'not ending with "drafting_migration.rb"' do
+            let!(:filename) { "#{Drafting.root}/lib/generators/drafting/migration/templates/something_migration.rb" }
+
+            before :each do
+              FileUtils.touch(filename)
+            end
+
+            after :each do
+              FileUtils.rm(filename)
+            end
+
+            it 'should raise error' do
+              expect { run_generator }.to raise_error('Migration files should start with a number followed by a dash to dictate the order of migration files to be generated')
+            end
           end
         end
       end

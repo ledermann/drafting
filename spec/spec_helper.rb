@@ -37,9 +37,9 @@ RSpec.configure do |config|
   config.after(:suite) do
     # TODO: make this metaprogramming
     SpecMigration.down
-    MetadataDraftingMigration.down
-    NonUserDraftingMigration.down
-    DraftingMigration.down
+    Object.constants.grep(/DraftingMigration$/).reverse.each do |const|
+      Object.const_get(const).down
+    end
   end
 end
 
@@ -49,10 +49,9 @@ def setup_db
   ActiveRecord::Base.establish_connection(:sqlite)
   ActiveRecord::Migration.verbose = false
 
-  # TODO: make this metaprogramming
-  DraftingMigration.up
-  NonUserDraftingMigration.up
-  MetadataDraftingMigration.up
+  Object.constants.grep(/DraftingMigration$/).each do |const|
+    Object.const_get(const).up
+  end
   SpecMigration.up
 end
 

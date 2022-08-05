@@ -21,7 +21,7 @@ module Drafting
       Drafting::MigrationGenerator.loop_through_migration_files do |original_filename|
         # these numbers will keep the migration files generated in order
         # for backwards compatibility, do NOT change the order of existing migration file templates🙏
-        raise 'Migration files should start with a number followed by a dash to dictate the order of migration files to be generated' if original_filename !~ /^[\d]+\-.*/
+        raise 'Migration files should start with a number followed by a dash to dictate the order of migration files to be generated' if original_filename !~ /^[\d]+\-.*drafting_migration\.rb/
       end
     end
 

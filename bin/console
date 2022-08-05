@@ -26,10 +26,9 @@ ActiveRecord::Base.configurations = YAML.load_file('spec/database.yml')
 ActiveRecord::Base.establish_connection(:sqlite)
 ActiveRecord::Migration.verbose = false
 
-# TODO: make this metaprogramming
-DraftingMigration.up
-NonUserMigration.up
-MetadataMigration.up
+Object.constants.grep(/DraftingMigration$/).each do |const|
+  Object.const_get(const).up
+end
 SpecMigration.up
 
 require "irb"
