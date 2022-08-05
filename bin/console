@@ -26,8 +26,8 @@ ActiveRecord::Base.configurations = YAML.load_file('spec/database.yml')
 ActiveRecord::Base.establish_connection(:sqlite)
 ActiveRecord::Migration.verbose = false
 
-Object.constants.grep(/DraftingMigration$/).each do |const|
-  Object.const_get(const).up
+Drafting::MigrationGenerator.loop_through_migration_files do |_, filename|
+  Object.const_get(filename.gsub('.rb', '').camelize).up
 end
 SpecMigration.up
 

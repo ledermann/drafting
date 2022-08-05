@@ -8,8 +8,12 @@ module Drafting
     desc 'Generates migration for Drafting'
     source_root File.expand_path('../templates', __FILE__)
 
-    def self.loop_through_migration_files
-      Dir.glob("#{MigrationGenerator.source_root}/*.rb").each_with_index do |abs_path, index|
+    def self.loop_through_migration_files(reverse: false)
+      files = Dir.glob("#{MigrationGenerator.source_root}/*.rb")
+
+      files = files.reverse if reverse
+
+      files.each_with_index do |abs_path, index|
         original_filename = File.basename(abs_path)
         filename = original_filename.split('-').last
 

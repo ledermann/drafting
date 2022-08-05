@@ -20,7 +20,7 @@ describe Draft do
     before do
       Draft.delete_all
 
-      message1.save_draft(user, 'Title1', 'Description1')
+      message1.save_draft(user, title: 'Title1')
       message2.save_draft(user)
     end
 

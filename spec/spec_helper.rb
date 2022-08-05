@@ -12,6 +12,7 @@ end
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'drafting'
 
+require "#{Drafting.root}/lib/generators/drafting/migration/migration_generator"
 Dir["#{Drafting.root}/lib/generators/drafting/migration/templates/*.rb"].each do |filename|
   require filename
 end
@@ -35,10 +36,9 @@ Dir[File.expand_path(File.join(File.dirname(__FILE__),'support','**','*.rb'))].e
 
 RSpec.configure do |config|
   config.after(:suite) do
-    # TODO: make this metaprogramming
     SpecMigration.down
-    Object.constants.grep(/DraftingMigration$/).reverse.each do |const|
-      Object.const_get(const).down
+    Drafting::MigrationGenerator.loop_through_migration_files(reverse: true) do |_, filename|
+      Object.const_get(filename.gsub('.rb', '').camelize).down
     end
   end
 end
@@ -49,8 +49,8 @@ def setup_db
   ActiveRecord::Base.establish_connection(:sqlite)
   ActiveRecord::Migration.verbose = false
 
-  Object.constants.grep(/DraftingMigration$/).each do |const|
-    Object.const_get(const).up
+  Drafting::MigrationGenerator.loop_through_migration_files do |_, filename|
+    Object.const_get(filename.gsub('.rb', '').camelize).up
   end
   SpecMigration.up
 end
