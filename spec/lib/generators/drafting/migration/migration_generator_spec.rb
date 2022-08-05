@@ -91,6 +91,23 @@ module Drafting
             end
           end
         end
+
+        describe 'migration file not starting with "<number>-"' do
+          let!(:filename) { "#{Drafting.root}/lib/generators/drafting/migration/templates/something.rb" }
+
+          before :each do
+            prepare_destination
+            FileUtils.touch(filename)
+          end
+
+          after :each do
+            FileUtils.rm(filename)
+          end
+
+          it 'should raise error' do
+            expect { run_generator }.to raise_error('Migration files should start with a number followed by a dash')
+          end
+        end
       end
     end
   end
