@@ -35,7 +35,9 @@ Dir[File.expand_path(File.join(File.dirname(__FILE__),'support','**','*.rb'))].e
 
 RSpec.configure do |config|
   config.after(:suite) do
+    # TODO: make this metaprogramming
     SpecMigration.down
+    MetadataDraftingMigration.down
     NonUserDraftingMigration.down
     DraftingMigration.down
   end
@@ -47,8 +49,10 @@ def setup_db
   ActiveRecord::Base.establish_connection(:sqlite)
   ActiveRecord::Migration.verbose = false
 
+  # TODO: make this metaprogramming
   DraftingMigration.up
   NonUserDraftingMigration.up
+  MetadataDraftingMigration.up
   SpecMigration.up
 end
 

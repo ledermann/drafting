@@ -77,6 +77,13 @@ describe Drafting::InstanceMethods do
       expect(draft.user_id).to eq(admin_user.id)
     end
 
+    it 'should save title & description on draft' do
+      message.save_draft(nil, 'Message Title', 'Message Description')
+      draft = Draft.find(message.draft_id)
+      expect(draft.title).to eq 'Message Title'
+      expect(draft.description).to eq 'Message Description'
+    end
+
     it 'should store extra attributes to Draft' do
       message.priority = 5
       message.save_draft(user)

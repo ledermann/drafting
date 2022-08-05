@@ -1,6 +1,6 @@
 module Drafting
   module InstanceMethods
-    def save_draft(user=nil)
+    def save_draft(user=nil, title=nil, description=nil)
       return false unless self.new_record?
 
       draft = Draft.find_by_id(self.draft_id) || Draft.new
@@ -10,16 +10,18 @@ module Drafting
       draft.user_id = user.try(:id)
       draft.user_type = user.try(:class).try(:name)
       draft.parent = self.send(self.class.draft_parent) if self.class.draft_parent
+      draft.title = title
+      draft.description = description
 
       result = draft.save
       self.draft_id = draft.id if result
       result
     end
 
-    def update_draft(user, attributes)
+    def update_draft(user, attributes, title=nil, description=nil)
       with_transaction_returning_status do
         assign_attributes(attributes)
-        save_draft(user)
+        save_draft(user, title, description)
       end
     end
 
