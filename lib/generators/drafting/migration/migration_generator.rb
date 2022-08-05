@@ -8,33 +8,35 @@ module Drafting
     desc 'Generates migration for Drafting'
     source_root File.expand_path('../templates', __FILE__)
 
-    def validation
-      Drafting::MigrationGenerator.loop_through_migration_files do |abs_path|
-        basename = File.basename(abs_path)
-        filename = basename.split('-').last
+    def self.loop_through_migration_files
+      Dir.glob("#{MigrationGenerator.source_root}/*.rb").each_with_index do |abs_path, index|
+        original_filename = File.basename(abs_path)
+        filename = original_filename.split('-').last
 
-        # these numbers will keep the migration files generated in order
-        # for backwards compatibility, do NOT change the order of existing migration file templates🙏
-        raise 'Migration files should start with a number followed by a dash' if basename !~ /^[\d]+\-.*/
+        yield original_filename, filename, index
       end
     end
 
-    # TODO: make these methods metaprogramming
-    def create_migration_file1
-      migration_template 'drafting_migration.rb', "db/migrate/drafting_migration.rb"
+    def validation
+      Drafting::MigrationGenerator.loop_through_migration_files do |original_filename|
+        # these numbers will keep the migration files generated in order
+        # for backwards compatibility, do NOT change the order of existing migration file templates🙏
+        raise 'Migration files should start with a number followed by a dash to dictate the order of migration files to be generated' if original_filename !~ /^[\d]+\-.*/
+      end
     end
 
-    def create_migration_file2
-      migration_template 'non_user_drafting_migration.rb', "db/migrate/non_user_drafting_migration.rb"
-    end
+    #########
+    # USAGE #
+    #########
 
-    def create_migration_file3
-      migration_template 'metadata_drafting_migration.rb', "db/migrate/metadata_drafting_migration.rb"
-    end
+    # Instance methods in this Generator will run in sequence (starting from `validation` above👆)
+    # The methods generated dynamically below will create the migration file in order
+    # This order is dictated by the number prefix in the name of the migration template files
+    # naming format should follow: `<number>-custom_name_drafting_migration.rb`
 
-    def self.loop_through_migration_files
-      Dir.glob("#{MigrationGenerator.source_root}/*.rb").each do |abs_path|
-        yield abs_path
+    loop_through_migration_files do |original_filename, filename, index|
+      define_method "create_migration_file#{index}" do
+        migration_template original_filename, "db/migrate/#{filename}"
       end
     end
 

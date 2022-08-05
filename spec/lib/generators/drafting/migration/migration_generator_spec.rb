@@ -105,7 +105,7 @@ module Drafting
           end
 
           it 'should raise error' do
-            expect { run_generator }.to raise_error('Migration files should start with a number followed by a dash')
+            expect { run_generator }.to raise_error('Migration files should start with a number followed by a dash to dictate the order of migration files to be generated')
           end
         end
       end
