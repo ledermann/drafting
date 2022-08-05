@@ -28,25 +28,12 @@ module Drafting
             run_generator
           end
 
-          it 'creates 3 installation db migration files in order eventually' do
-            migration_files =
-              Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
-
-            assert_equal migration_files.count, 3
-
-            assert_file migration_files[0],
-              /class DraftingMigration < Drafting::MIGRATION_BASE_CLASS/
-            assert_file migration_files[1],
-              /class NonUserDraftingMigration < Drafting::MIGRATION_BASE_CLASS/
-            assert_file migration_files[2],
-              /class MetadataDraftingMigration < Drafting::MIGRATION_BASE_CLASS/
-          end
+          include_examples 'eventual output', root_dir
 
           it "creates migration files of different timestamp" do
             migration_files =
               Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
 
-              # TODO: there has to be a better way to do this
               timestamps = migration_files.map do |migration_file|
                 File.basename(migration_file).split("_").first
               end
@@ -62,7 +49,7 @@ module Drafting
             run_generator
           end
 
-          describe 'from 0.5.x' do
+          describe 'before 0.5.x' do
             before :each do
               FileUtils.rm Dir.glob("#{root_dir}/db/migrate/*non_user_drafting_migration.rb")
               FileUtils.rm Dir.glob("#{root_dir}/db/migrate/*metadata_drafting_migration.rb")
@@ -76,19 +63,25 @@ module Drafting
               run_generator
             end
 
-            it 'creates 3 installation db migration files in order eventually' do
+            include_examples 'eventual output', root_dir
+          end
+
+          describe 'after 0.5.x' do
+            before :each do
+              FileUtils.rm Dir.glob("#{root_dir}/db/migrate/*metadata_drafting_migration.rb")
+
               migration_files =
                 Dir.glob("#{root_dir}/db/migrate/*drafting*.rb").sort
-
-              assert_equal migration_files.count, 3
-
+              expect(migration_files.count).to eq 2
               assert_file migration_files[0],
                 /class DraftingMigration < Drafting::MIGRATION_BASE_CLASS/
               assert_file migration_files[1],
                 /class NonUserDraftingMigration < Drafting::MIGRATION_BASE_CLASS/
-              assert_file migration_files[2],
-                /class MetadataDraftingMigration < Drafting::MIGRATION_BASE_CLASS/
+
+              run_generator
             end
+
+            include_examples 'eventual output', root_dir
           end
         end
 
