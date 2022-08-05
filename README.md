@@ -66,16 +66,45 @@ drafts = Message.drafts(current_user)
 messages = drafts.restore_all
 ```
 
-### Migration
+### Migrations & Their Features
+
+If you are upgrading from previous versions, simply run `rails g drafting:migration` again to generate the mising migration files.
 
 #### 0.5.x
 
 Starting from 0.5.x, you will be able to save drafts under a non `User` model as such:
-```
+
+```ruby
 message.save_draft(author)
 ```
 
-If you are upgrading from previous versions, simply run `rails g drafting:migration` again to generate the mising migration files.
+#### 0.6.x
+
+Starting from 0.6.x, you will be able to save metadata to your `draft` (eg. to label your drafts) as such:
+
+```ruby
+message.save_draft(author, { title: 'Final Draft 2022-08-06' })
+draft = Draft.find(message.draft_id)
+draft.title # => 'Final Draft 2022-08-06'
+
+message.update_draft(
+  author,
+  { content: 'New content for message' },
+  {
+    title: 'Final Final Draft 2022-08-06',
+    version: '1.123'
+  }
+)
+message.content # => 'New content for message'
+draft = Draft.find(message.draft_id)
+draft.title # => 'Final Final Draft 2022-08-06'
+draft.version # => '1.123'
+draft.version = '1.5'
+draft.save
+draft.reload.version # => '1.5'
+```
+
+Note that the `metadata` on the draft is essentially a [Rails store](https://api.rubyonrails.org/classes/ActiveRecord/Store.html) whose keys are dynamically generated according to your application needs. They are generated on the fly via `method_missing`.
 
 ### Linking to parent instance
 

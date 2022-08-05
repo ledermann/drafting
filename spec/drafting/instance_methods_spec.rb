@@ -77,11 +77,21 @@ describe Drafting::InstanceMethods do
       expect(draft.user_id).to eq(admin_user.id)
     end
 
-    it 'should save title & description on draft' do
-      message.save_draft(nil, 'Message Title', 'Message Description')
+    it 'should save metadata on draft and allow changes' do
+      message.save_draft(
+        nil,
+        {
+          title: 'Message Title',
+          sub_title: 'Message SubTitle'
+        }
+      )
       draft = Draft.find(message.draft_id)
       expect(draft.title).to eq 'Message Title'
-      expect(draft.description).to eq 'Message Description'
+      expect(draft.sub_title).to eq 'Message SubTitle'
+
+      draft.title = 'New Title'
+      draft.save
+      expect(draft.reload.title).to eq 'New Title'
     end
 
     it 'should store extra attributes to Draft' do
@@ -92,7 +102,7 @@ describe Drafting::InstanceMethods do
       expect(draft.restore.priority).to eq(5)
     end
 
-    it 'should store assocations to Draft' do
+    it 'should store associations to Draft' do
       message = topic.messages.build user: user, content: 'foo'
       message.tags.build name: 'important'
       message.tags.build name: 'ruby'
@@ -125,7 +135,7 @@ describe Drafting::InstanceMethods do
   end
 
   describe 'update_draft' do
-    it 'should update existing Draft object' do
+    it 'should update existing Draft object (without metadata)' do
       message.save_draft(user)
 
       expect {
@@ -135,6 +145,31 @@ describe Drafting::InstanceMethods do
 
       draft = Draft.find(message.draft_id)
       expect(draft.restore.attributes).to eq(message.attributes)
+    end
+
+    it 'should update existing Draft object (with metadata)' do
+      message.save_draft(user)
+
+      expect {
+        message.update_draft(
+          user,
+          { content: 'bar' },
+          {
+            title: 'Message Title',
+            sub_title: 'Message SubTitle'
+          }
+        )
+      }.to change(Draft, :count).by(0).and \
+           change(Message, :count).by(0)
+
+      draft = Draft.find(message.draft_id)
+      expect(draft.title).to eq 'Message Title'
+      expect(draft.sub_title).to eq 'Message SubTitle'
+      expect(draft.restore.attributes).to eq(message.attributes)
+
+      draft.title = 'New Title'
+      draft.save
+      expect(draft.reload.title).to eq 'New Title'
     end
   end
 

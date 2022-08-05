@@ -1,5 +1,5 @@
 module Drafting
-  VERSION = "0.5.1"
+  VERSION = "0.6.0"
 
   def self.root
     File.expand_path '../../..', __FILE__
