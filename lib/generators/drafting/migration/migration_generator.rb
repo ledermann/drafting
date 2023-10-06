@@ -14,16 +14,12 @@ module Drafting
     end
 
     def self.next_migration_number(dirname)
-      if ActiveRecord::Base.timestamped_migrations
-        # ensure timestamp of the multiple migration files generated
-        # will be different
-        timestamp = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
-        timestamp += 1 if current_migration_number(dirname) == timestamp
+      # ensure timestamp of the multiple migration files generated
+      # will be different
+      timestamp = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
+      timestamp += 1 if current_migration_number(dirname) == timestamp
 
-        timestamp
-      else
-        "%.3d" % (current_migration_number(dirname) + 1)
-      end
+      timestamp
     end
   end
 end
